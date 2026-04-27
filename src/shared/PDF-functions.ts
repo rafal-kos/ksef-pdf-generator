@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import {
   Column,
   Content,
@@ -570,7 +571,7 @@ export function getTStawkaPodatku(code: string, version: 1 | 2 | 3 | 'RR', P_PMa
   }
 
   if (TStawkaPodatkuVersioned[code]) {
-    return translateMap(TStawkaPodatkuVersioned[code], TStawkaPodatkuVersioned);
+    return i18n.t(TStawkaPodatkuVersioned[code]);
   }
   return code;
 }
