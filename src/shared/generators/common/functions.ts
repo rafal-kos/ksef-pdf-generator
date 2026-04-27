@@ -37,13 +37,6 @@ export function formatDateTime(data?: string, withoutSeconds?: boolean, withoutT
 }
 
 export function formatDateTimePl(value: string, withTime?: boolean, withSeconds?: boolean): string {
-  const optionsForDate: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  const optionsForTime: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-  };
-  const optionsForSeconds: Intl.DateTimeFormatOptions = { second: '2-digit' };
-
   if (!value) {
     return '';
   }
@@ -53,14 +46,22 @@ export function formatDateTimePl(value: string, withTime?: boolean, withSeconds?
     return value;
   }
 
-  return new Intl.DateTimeFormat('pl-PL', {
-    timeZone: 'Europe/Warsaw',
-    ...optionsForDate,
-    ...(withTime && optionsForTime),
-    ...(withSeconds && optionsForSeconds),
-  })
-    .format(date)
-    .replace(', ', ' ');
+  // ISO date-only strings (YYYY-MM-DD) are parsed as UTC midnight by JS engines.
+  // Using UTC accessors prevents day-shift on servers whose local timezone is behind UTC.
+  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const year = isDateOnly ? date.getUTCFullYear() : date.getFullYear();
+  const month = ((isDateOnly ? date.getUTCMonth() : date.getMonth()) + 1).toString().padStart(2, '0');
+  const day = (isDateOnly ? date.getUTCDate() : date.getDate()).toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  if (!withTime) {
+    return `${day}.${month}.${year}`;
+  } else if (!withSeconds) {
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+  }
+  return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
 }
 
 export function getDateTimeWithoutSeconds(isoDate?: FP2): string {
