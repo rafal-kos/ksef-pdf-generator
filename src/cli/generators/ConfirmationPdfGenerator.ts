@@ -1,16 +1,15 @@
-import i18n from 'i18next';
 import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
+import i18n from 'i18next';
 import { Content, ContentText, TDocumentDefinitions } from 'pdfmake/interfaces.js';
 import { generateQR2CodeData, generateQRCodeData } from '../../lib-public/generators/common/Stopka.js';
 import { generatePodmioty } from '../../lib-public/generators/FA3/Podmioty.js';
 import { initI18next } from '../../lib-public/i18n/i18n-init.js';
 import { AdditionalDataTypes } from '../../lib-public/types/common.types.js';
-import { Fa as Fa3, Naglowek } from '../../lib-public/types/fa3.types';
+import { Fa as Fa3 } from '../../lib-public/types/fa3.types';
 import { Faktura } from '../../lib-public/types/fa3.types.js';
 import { TRodzajFaktury } from '../../shared/consts/const.js';
 import FormatTyp, { Position } from '../../shared/enums/common.enum.js';
 import {
-  createLabelText,
   createLabelTextArray,
   createSection,
   formatText,
@@ -44,7 +43,7 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
         ...this.generateNaglowek(invoice.Fa),
         ...generatePodmioty(invoice),
         this.generateWiersze(invoice.Fa!),
-        this.generateStopka(additionalData, invoice.Naglowek),
+        this.generateStopka(additionalData),
       ],
       ...generateStyle(),
     };
@@ -52,7 +51,7 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
     return pdfMake.createPdf(docDefinition);
   }
 
-  private generateStopka(additionalData?: AdditionalDataTypes, naglowek?: Naglowek): Content[] {
+  private generateStopka(additionalData?: AdditionalDataTypes): Content[] {
     const qrCode: Content[] = generateQRCodeData(additionalData, false);
     const qr2Code: Content[] = generateQR2CodeData(additionalData, false);
 
@@ -60,16 +59,6 @@ export class ConfirmationPdfGenerator implements IPdfGenerator {
       verticalSpacing(1),
       { stack: [...qrCode], unbreakable: false },
       { stack: [...qr2Code], unbreakable: false },
-      createSection(
-        [
-          {
-            stack: createLabelText(i18n.t('invoice.footer.generatedIn'), naglowek?.SystemInfo),
-            margin: [0, 8, 0, 0],
-          },
-        ],
-        false,
-        [0, 0, 0, 0]
-      ),
     ];
 
     return createSection(result, false);

@@ -51,7 +51,7 @@ export function generateFA2(invoice: Faktura, additionalData: AdditionalDataType
       generateRozliczenie(invoice.Fa?.Rozliczenie, invoice.Fa?.KodWaluty?._text ?? ''),
       generatePlatnosc(invoice.Fa?.Platnosc),
       generateWarunkiTransakcji(invoice.Fa?.WarunkiTransakcji),
-      ...generateStopka(additionalData, invoice.Stopka, invoice.Naglowek, invoice.Fa?.WZ),
+      ...generateStopka(additionalData, invoice.Stopka, invoice.Fa?.WZ),
     ],
     footer: (currentPage, pageCount) => {
       return {

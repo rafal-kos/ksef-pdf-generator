@@ -3,7 +3,6 @@ import { Content, ContentQr } from 'pdfmake/interfaces';
 import FormatTyp from '../../../shared/enums/common.enum.js';
 import {
   createHeader,
-  createLabelText,
   createSection,
   createSubHeader,
   formatText,
@@ -18,14 +17,13 @@ import { FormContentState } from '../../../shared/types/additional-data.types';
 import { HeaderDefine } from '../../../shared/types/pdf-types.js';
 import { AdditionalDataTypes } from '../../types/common.types';
 import { Informacje, Rejestry } from '../../types/fa1.types';
-import { FP, Naglowek, Stopka } from '../../types/fa2.types';
+import { FP, Stopka } from '../../types/fa2.types';
 import { Zalacznik } from '../../types/fa3.types';
 import { generateZalaczniki } from './Zalaczniki.js';
 
 export function generateStopka(
   additionalData?: AdditionalDataTypes,
   stopka?: Stopka,
-  naglowek?: Naglowek,
   wz?: FP[],
   zalacznik?: Zalacznik
 ): Content[] {
@@ -46,16 +44,6 @@ export function generateStopka(
     ...(zalaczniki.length ? zalaczniki : []),
     { stack: [...qrCode], unbreakable: true },
     { stack: [...qr2Code], unbreakable: true },
-    createSection(
-      [
-        {
-          stack: createLabelText(i18n.t('invoice.footer.generatedIn'), naglowek?.SystemInfo),
-          margin: [0, 8, 0, 0],
-        },
-      ],
-      false,
-      [0, 0, 0, 0]
-    ),
   ];
 
   return createSection(result, false);

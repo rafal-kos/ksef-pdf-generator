@@ -30,7 +30,7 @@ export function generateFARR(invoice: FaRR, additionalData: AdditionalDataTypes)
       generateDodatkoweInformacje(invoice.FakturaRR!),
       generateRozliczenie(invoice.FakturaRR?.Rozliczenie, invoice.FakturaRR?.KodWaluty?._text ?? ''),
       generatePlatnosc(invoice.FakturaRR?.Platnosc),
-      ...generateStopka(additionalData, invoice.Stopka, invoice.Naglowek),
+      ...generateStopka(additionalData, invoice.Stopka),
     ],
     footer: (currentPage, pageCount) => {
       return {
