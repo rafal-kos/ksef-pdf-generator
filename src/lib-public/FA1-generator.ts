@@ -4,7 +4,6 @@ import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 import { generateStyle, getValue, hasValue } from '../shared/PDF-functions.js';
 import { TRodzajFaktury } from '../shared/consts/FA.const.js';
 import { generateWatermark } from '../shared/consts/watermark.js';
-import { Position } from '../shared/enums/common.enum.js';
 import { ZamowienieKorekta } from './enums/invoice.enums.js';
 import { generateAdnotacje } from './generators/FA1/Adnotacje.js';
 import { generateDodatkoweInformacje } from './generators/FA1/DodatkoweInformacje.js';
@@ -53,13 +52,6 @@ export function generateFA1(invoice: Faktura, additionalData: AdditionalDataType
       generateWarunkiTransakcji(invoice.Fa?.WarunkiTransakcji),
       ...generateStopka(additionalData, invoice.Stopka, invoice.Fa?.WZ),
     ],
-    footer: (currentPage, pageCount) => {
-      return {
-        text: currentPage.toString() + ' z ' + pageCount,
-        alignment: Position.RIGHT,
-        margin: [0, 0, 40, 0],
-      };
-    },
     ...generateStyle(),
   };
 

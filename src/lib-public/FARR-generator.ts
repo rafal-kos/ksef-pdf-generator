@@ -2,7 +2,6 @@ import pdfMake, { TCreatedPdf } from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { generateWatermark } from '../shared/consts/watermark.js';
-import { Position } from '../shared/enums/common.enum.js';
 import { generateStyle } from '../shared/PDF-functions.js';
 import { generateDaneFaKorygowanej } from './generators/common/DaneFaKorygowanej.js';
 import { generateRozliczenie } from './generators/common/Rozliczenie.js';
@@ -32,13 +31,6 @@ export function generateFARR(invoice: FaRR, additionalData: AdditionalDataTypes)
       generatePlatnosc(invoice.FakturaRR?.Platnosc),
       ...generateStopka(additionalData, invoice.Stopka),
     ],
-    footer: (currentPage, pageCount) => {
-      return {
-        text: currentPage.toString() + ' z ' + pageCount,
-        alignment: Position.RIGHT,
-        margin: [0, 0, 40, 0],
-      };
-    },
     ...generateStyle(),
   };
 
